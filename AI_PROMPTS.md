@@ -13,11 +13,10 @@ Using AI tools for this challenge is allowed. Be honest here — an accurate
 
 List the main prompts you used. Paraphrasing is fine.
 
-1. `I got a home assignment from F5 company, research the folder and summarize what needs to be done, rules, and how to submit.`
-2. `Explain what caused the apt-get conffile prompt failure during proxy image build and how to fix it.`
-3. `The proxy connects to 127.0.0.1:8080 and fails with connection refused; explain container networking in Docker Compose.`
-4. `The backend loads config keys with sleep delays; how do we coordinate Docker Compose startup without modifying backend/app.py?`
-5. `Explain the difference between Ubuntu and Alpine base images and what changes are needed to run Nginx as a non-root user.`
+1. `Can you help me understand the 3-container setup and the rules in the README?`
+2. `Why is Docker failing on apt-get install with an error about nginx.conf conffile prompt?`
+3. `Why did 127.0.0.1 fail for the backend, and how does Docker DNS resolve container names like "backend"?`
+4. `How can I shrink the proxy image using Alpine and make Nginx run without root?`
 
 ---
 
@@ -27,7 +26,7 @@ Describe **one concrete case** where the AI's answer was wrong, outdated, or
 sub-optimal. Cover: what it suggested, how you noticed it was wrong, and what
 you did instead. 3–5 sentences.
 
-> When addressing the bonus questions, the AI initially proposed a single monolithic patch that simultaneously introduced `nginx:alpine`, non-root user permissions, temporary PID redirection, and extra security headers into both the Dockerfile and configuration. I noticed this mixed multiple distinct requirements into one large change instead of isolating the image size reduction first. I asked the AI to explain the changes line-by-line rather than dumping code, and to separate the minimal image migration from the non-root configuration. This allowed us to verify the image reduction (from 325MB to 68.5MB) before layering on non-root permissions.
+> When ./scripts/run-tests.sh gave a permission denied error, the AI suggested editing .github/workflows/ci.yml to run "bash ./scripts/run-tests.sh" instead of "./scripts/run-tests.sh". I realized that only masked the real issue because the script itself was missing its executable bit in the Git index. Instead of modifying the CI workflow, I made the file executable with chmod +x and used "git update-index --chmod=+x scripts/run-tests.sh". That way the executable permission is tracked in Git and works cleanly for anyone who clones the repo.
 
 ---
 
@@ -35,4 +34,4 @@ you did instead. 3–5 sentences.
 
 We would rather know. Write "nothing" if that is the case.
 
-> nothing
+> I know Docker Compose uses internal DNS to resolve "backend" to the container IP. But I didn't fully dive into how Nginx handles DNS caching for upstreams if IPs change dynamically, so that's something I plan to learn more.
